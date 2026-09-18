@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import DashboardNavbar from "@/components/DashboardNavbar";
 import RobotModelViewer from "@/components/RobotModelViewer";
 import { initialCoursesData, Course } from "@/data/courses";
 import {
@@ -54,9 +53,6 @@ export default function LessonPage() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex flex-col font-sans select-none pb-16">
-      {/* Navbar */}
-      <DashboardNavbar />
-
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-8 py-6 sm:py-8">
         {/* Navigation Header */}
