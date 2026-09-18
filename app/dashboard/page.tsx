@@ -61,7 +61,7 @@ export default function DashboardPage() {
       icon: <HiOutlineQuestionMarkCircle className="w-6 h-6 text-[#0062b1] group-hover:scale-110 transition-transform" />,
       iconBg: "bg-blue-50/80 border-blue-100",
       badge: "460 New",
-      href: "#quizzes",
+      href: "/quizzes",
     },
     {
       title: "Certificates",

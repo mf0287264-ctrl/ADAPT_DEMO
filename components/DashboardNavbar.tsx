@@ -12,7 +12,8 @@ export default function DashboardNavbar() {
     { name: "Home", href: "/dashboard" },
     { name: "Available Courses", href: "/courses" },
     { name: "My Courses", href: "/my-courses" },
-    { name: "AI Teacher", href: "#ai-teacher" },
+    { name: "Quizzes", href: "/quizzes" },
+    { name: "AI Teacher", href: "/dashboard#ai-teacher" },
   ];
 
   return (
@@ -46,18 +47,8 @@ export default function DashboardNavbar() {
           </div>
         </div>
 
-        {/* Right Section: Language, Save Progress, Static Notification & Logout */}
+        {/* Right Section: Static Notification & Logout */}
         <div className="hidden md:flex items-center gap-6 text-xs text-slate-300">
-          <div className="flex items-center gap-1 cursor-pointer hover:text-white">
-            <span>English</span>
-            <svg className="w-3.5 h-3.5 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
-
-          <button className="hover:text-white transition-colors cursor-pointer">
-            Save Progress
-          </button>
 
           {/* Static Notification Bell Icon */}
           <div className="relative cursor-pointer hover:text-white transition-colors" title="Notifications">
