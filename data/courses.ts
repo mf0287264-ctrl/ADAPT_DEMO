@@ -5,12 +5,11 @@ export interface Course {
   category: string;
   level: string;
   lessonsCount: number;
-  iconName: string;
-  gradient: string;
+  svgBg: string;
   enrolled: boolean;
 }
 
-// Editable Course List
+// Editable Course List with 100% reliable local SVG graphics
 export const initialCoursesData: Course[] = [
   {
     id: "python-101",
@@ -19,8 +18,7 @@ export const initialCoursesData: Course[] = [
     category: "Python",
     level: "Beginner",
     lessonsCount: 30,
-    iconName: "python",
-    gradient: "from-sky-500 via-blue-600 to-indigo-700",
+    svgBg: "from-sky-500 via-blue-600 to-indigo-700",
     enrolled: true,
   },
   {
@@ -30,8 +28,7 @@ export const initialCoursesData: Course[] = [
     category: "Web Dev",
     level: "Beginner",
     lessonsCount: 45,
-    iconName: "code",
-    gradient: "from-cyan-500 via-blue-500 to-indigo-600",
+    svgBg: "from-cyan-500 via-blue-500 to-indigo-600",
     enrolled: true,
   },
   {
@@ -41,8 +38,7 @@ export const initialCoursesData: Course[] = [
     category: "C++",
     level: "Intermediate",
     lessonsCount: 36,
-    iconName: "cpu",
-    gradient: "from-blue-600 to-violet-700",
+    svgBg: "from-blue-600 via-indigo-600 to-violet-700",
     enrolled: false,
   },
   {
@@ -52,8 +48,7 @@ export const initialCoursesData: Course[] = [
     category: "AI & Data",
     level: "Advanced",
     lessonsCount: 20,
-    iconName: "sparkles",
-    gradient: "from-indigo-600 via-purple-600 to-pink-600",
+    svgBg: "from-indigo-600 via-purple-600 to-pink-600",
     enrolled: false,
   },
   {
@@ -63,8 +58,7 @@ export const initialCoursesData: Course[] = [
     category: "JavaScript",
     level: "Intermediate",
     lessonsCount: 28,
-    iconName: "terminal",
-    gradient: "from-blue-500 to-cyan-500",
+    svgBg: "from-blue-500 via-sky-500 to-cyan-500",
     enrolled: false,
   },
 ];

@@ -21,6 +21,31 @@ html, body {
   padding: 0;
 }
 
+/* Custom Waving Hand Keyframe Animation */
+@keyframes wave {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  20% {
+    transform: rotate(14deg);
+  }
+  40% {
+    transform: rotate(-10deg);
+  }
+  60% {
+    transform: rotate(14deg);
+  }
+  80% {
+    transform: rotate(-4deg);
+  }
+}
+
+.animate-wave {
+  display: inline-block;
+  transform-origin: 70% 70%;
+  animation: wave 2.2s ease-in-out infinite;
+}
+
 /* Custom Cloud Floating Keyframe Animations */
 @keyframes cloudSlow {
   0% {

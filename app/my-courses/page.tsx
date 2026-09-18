@@ -3,8 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import DashboardNavbar from "@/components/DashboardNavbar";
+import CourseCardImage from "@/components/CourseCardImage";
 import { useCourses } from "@/context/CourseContext";
-import { HiOutlineBookOpen } from "react-icons/hi2";
 
 export default function MyCoursesPage() {
   const { myCourses, unenrollCourse } = useCourses();
@@ -53,20 +53,22 @@ export default function MyCoursesPage() {
               {myCourses.map((course) => (
                 <div
                   key={course.id}
-                  className="border border-slate-200 rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
+                  className="border border-slate-200 rounded-3xl overflow-hidden bg-white shadow-xs hover:shadow-2xl hover:border-[#38a1f3] hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group cursor-pointer"
                 >
-                  {/* Course Graphic Banner */}
-                  <div className={`h-44 bg-gradient-to-br ${course.gradient} relative flex items-center justify-center p-6 text-white overflow-hidden`}>
-                    <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:12px_12px]" />
-                    <div className="relative p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20">
-                      <HiOutlineBookOpen className="w-12 h-12" />
-                    </div>
+                  {/* Clean Image Header */}
+                  <div className="h-44 relative overflow-hidden">
+                    <CourseCardImage category={course.category} gradient={course.svgBg} />
                   </div>
 
                   {/* Card Body */}
                   <div className="p-5 flex flex-col justify-between flex-1">
                     <div>
-                      <h2 className="text-lg font-bold text-slate-800">
+                      <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
+                        <span>{course.category}</span>
+                        <span>{course.lessonsCount} Lessons</span>
+                      </div>
+
+                      <h2 className="text-lg font-bold text-slate-800 group-hover:text-[#0062b1] transition-colors">
                         {course.title}
                       </h2>
                       <p className="text-xs text-slate-500 mt-1 leading-relaxed">
@@ -75,7 +77,7 @@ export default function MyCoursesPage() {
                     </div>
 
                     {/* Action Footer */}
-                    <div className="mt-6 flex items-center justify-between">
+                    <div className="mt-6 flex items-center justify-between pt-3 border-t border-slate-100">
                       <button
                         onClick={() => unenrollCourse(course.id)}
                         className="text-xs text-slate-400 hover:text-red-500 transition-colors cursor-pointer"
@@ -86,7 +88,7 @@ export default function MyCoursesPage() {
                       {/* Bright Blue Start Button */}
                       <Link
                         href={`#lesson-${course.id}`}
-                        className="bg-[#38a1f3] hover:bg-blue-600 text-white text-sm font-medium px-6 py-2 rounded transition-colors shadow-xs"
+                        className="bg-[#38a1f3] hover:bg-blue-600 text-white text-sm font-medium px-6 py-2 rounded-xl transition-colors shadow-xs active:scale-95"
                       >
                         Start
                       </Link>

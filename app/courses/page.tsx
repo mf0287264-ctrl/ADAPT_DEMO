@@ -3,8 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import DashboardNavbar from "@/components/DashboardNavbar";
+import CourseCardImage from "@/components/CourseCardImage";
 import { useCourses } from "@/context/CourseContext";
-import { HiOutlineBookOpen, HiOutlinePlus } from "react-icons/hi2";
+import { HiOutlinePlus } from "react-icons/hi2";
 
 export default function AvailableCoursesPage() {
   const { availableCourses, enrollCourse } = useCourses();
@@ -53,17 +54,11 @@ export default function AvailableCoursesPage() {
               {availableCourses.map((course) => (
                 <div
                   key={course.id}
-                  className="border border-slate-200 rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
+                  className="border border-slate-200 rounded-3xl overflow-hidden bg-white shadow-xs hover:shadow-2xl hover:border-[#38a1f3] hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group cursor-pointer"
                 >
-                  {/* Banner Header */}
-                  <div className={`h-40 bg-gradient-to-br ${course.gradient} relative flex items-center justify-center p-6 text-white overflow-hidden`}>
-                    <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:12px_12px]" />
-                    <div className="relative p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20">
-                      <HiOutlineBookOpen className="w-10 h-10" />
-                    </div>
-                    <span className="absolute top-3 right-3 bg-black/30 backdrop-blur-md text-white text-[10px] uppercase tracking-wider px-2 py-0.5 rounded font-mono">
-                      {course.level}
-                    </span>
+                  {/* Clean Image Banner Header */}
+                  <div className="h-44 relative overflow-hidden">
+                    <CourseCardImage category={course.category} gradient={course.svgBg} />
                   </div>
 
                   {/* Card Content & Enrollment Action */}
@@ -74,7 +69,7 @@ export default function AvailableCoursesPage() {
                         <span>{course.lessonsCount} Lessons</span>
                       </div>
 
-                      <h2 className="text-base font-bold text-slate-800">
+                      <h2 className="text-base font-bold text-slate-800 group-hover:text-[#0062b1] transition-colors">
                         {course.title}
                       </h2>
                       <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
@@ -83,10 +78,14 @@ export default function AvailableCoursesPage() {
                     </div>
 
                     {/* Enroll Button */}
-                    <div className="mt-6 flex items-center justify-end">
+                    <div className="mt-6 flex items-center justify-between pt-3 border-t border-slate-100">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                        {course.level}
+                      </span>
+
                       <button
                         onClick={() => enrollCourse(course.id)}
-                        className="bg-[#38a1f3] hover:bg-blue-600 text-white text-xs font-semibold px-5 py-2 rounded transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
+                        className="bg-[#38a1f3] hover:bg-blue-600 text-white text-xs font-semibold px-5 py-2 rounded-xl transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95"
                       >
                         <HiOutlinePlus className="w-4 h-4" />
                         Enroll Now
