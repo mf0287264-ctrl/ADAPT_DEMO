@@ -87,7 +87,7 @@ export default function MyCoursesPage() {
 
                       {/* Bright Blue Start Button */}
                       <Link
-                        href={`#lesson-${course.id}`}
+                        href={`/my-courses/lesson?courseId=${course.id}`}
                         className="bg-[#38a1f3] hover:bg-blue-600 text-white text-sm font-medium px-6 py-2 rounded-xl transition-colors shadow-xs active:scale-95"
                       >
                         Start
