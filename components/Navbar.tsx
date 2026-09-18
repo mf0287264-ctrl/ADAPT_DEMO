@@ -26,12 +26,6 @@ export default function Navbar() {
         <Link href="#courses" className="hover:text-white transition-opacity">
           Courses
         </Link>
-        <Link
-          href="#ai-teacher"
-          className="hover:text-white transition-opacity"
-        >
-          Exercise
-        </Link>
 
         {/* White Pill Login Button */}
         <Link

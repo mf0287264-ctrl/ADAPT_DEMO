@@ -3,15 +3,17 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import RobotModelViewer from "@/components/RobotModelViewer";
 import { initialCoursesData, Course } from "@/data/courses";
+import { VoicePoweredOrb } from "@/components/ui/voice-powered-orb";
+import { Button } from "@/components/ui/button";
+import { Mic, MicOff } from "lucide-react";
 import {
   HiOutlineArrowLeft,
-  HiOutlineSparkles,
-  HiOutlineChatBubbleLeftRight,
   HiOutlineCheckCircle,
   HiOutlineChevronRight,
   HiOutlineAcademicCap,
+  HiPlay,
+  HiOutlineClipboardDocumentCheck,
 } from "react-icons/hi2";
 
 export default function LessonPage() {
@@ -21,34 +23,18 @@ export default function LessonPage() {
   const course: Course =
     initialCoursesData.find((c: Course) => c.id === courseId) || initialCoursesData[0];
 
-  const [activeTab, setActiveTab] = useState<"overview" | "code" | "notes">("overview");
-  const [askInput, setAskInput] = useState("");
-  const [aiResponse, setAiResponse] = useState(
-    `Hello! I'm your AI Teacher for "${course.title}". Ask me any questions about this lesson!`
-  );
-  const [isThinking, setIsThinking] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const [activeOutlineIndex, setActiveOutlineIndex] = useState(0);
+  const [isRecording, setIsRecording] = useState(false);
+  const [voiceDetected, setVoiceDetected] = useState(false);
 
-  const handleAskMe = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (!askInput.trim()) return;
-
-    setIsThinking(true);
-    setAiResponse("Analyzing your question...");
-
-    setTimeout(() => {
-      setIsThinking(false);
-      setAiResponse(
-        `Here is my explanation for "${askInput}": In ${course.category}, always remember to verify your variables and structure logic step-by-step.`
-      );
-      setAskInput("");
-    }, 1200);
-  };
-
-  const samplePrompts = [
-    "Explain this lesson in simple terms",
-    "Give me a code example",
-    "Test my understanding with a question",
+  const outlineItems = [
+    { title: "What Is Recursion?", duration: "3m", isQuiz: false },
+    { title: "The Call Stack In Action", duration: "3m", isQuiz: false },
+    { title: "Stack Overflow & Tail Recursion", duration: "3m", isQuiz: false },
+    { title: "Tree Recursion & Fibonacci", duration: "3m", isQuiz: false },
+    { title: "Recursion vs Iteration: Tradeoffs", duration: "3m", isQuiz: false },
+    { title: "Recursion Mastery Quiz", duration: "2m", isQuiz: true },
   ];
 
   return (
@@ -74,189 +60,208 @@ export default function LessonPage() {
           </div>
         </div>
 
-        {/* 2-COLUMN MAIN GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        {/* 2-COLUMN MAIN GRID WITH ENLARGED RIGHT PANEL */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
           {/* LEFT MAIN CONTENT COLUMN */}
-          <div className="lg:col-span-2 flex flex-col gap-6">
-            {/* Lesson Title Banner */}
-            <div className="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xs">
-              <div className="flex items-center gap-2 text-xs font-bold text-cyan-600 uppercase tracking-wider mb-2">
-                <HiOutlineAcademicCap className="w-4 h-4" />
-                Lesson 1 of {course.lessonsCount}
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-sans">
-                {course.title}: Fundamentals & Key Concepts
-              </h1>
-              <p className="text-xs sm:text-sm font-semibold text-slate-500 mt-2 leading-relaxed">
-                {course.description}
-              </p>
-            </div>
+          <div className="lg:col-span-3 flex flex-col gap-6">
+            {/* ── AI TEACHER SVG DRAWING CANVAS (ENLARGED WHITE BG) ── */}
+            <div className="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-10 shadow-sm min-h-[560px] flex flex-col justify-between">
+              
+              {/* SVG Drawing Canvas Area */}
+              <div className="my-2 relative flex items-center justify-center min-h-[400px] bg-slate-50/80 rounded-2xl border border-slate-200/80 p-8 sm:p-10">
+                {course.category === "Python" || course.category === "C++" ? (
+                  /* SVG DIAGRAM 1: ALGORITHMIC FLOW & MEMORY TREE */
+                  <svg className="w-full max-w-xl h-72 sm:h-80 text-[#0062b1]" viewBox="0 0 500 220" fill="none">
+                    {/* Connection Lines */}
+                    <path
+                      d="M 80 110 L 220 110 M 280 110 L 420 110 M 250 80 L 250 30 M 250 140 L 250 190"
+                      stroke="#38a1f3"
+                      strokeWidth="3"
+                      strokeDasharray="6 6"
+                      className="animate-[dash_10s_linear_infinite]"
+                    />
 
-            {/* Interactive Player / Workspace Area */}
-            <div className="bg-slate-900 rounded-3xl border border-slate-800 overflow-hidden shadow-xl text-white">
-              <div className="bg-slate-950 px-6 py-3 border-b border-slate-800 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-red-500/80" />
-                  <span className="w-3 h-3 rounded-full bg-amber-500/80" />
-                  <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                  <span className="ml-2 text-xs font-mono text-slate-400">
-                    lesson-1-{course.id}.py
-                  </span>
-                </div>
-                <span className="text-[11px] font-bold text-cyan-400 bg-cyan-950 px-2.5 py-0.5 rounded-full border border-cyan-800">
-                  Interactive Preview
-                </span>
-              </div>
+                    {/* Left Node */}
+                    <g className="transition-transform hover:scale-105 cursor-pointer">
+                      <rect x="15" y="75" width="115" height="70" rx="16" fill="#063966" stroke="#0062b1" strokeWidth="2.5" />
+                      <circle cx="72.5" cy="110" r="14" fill="#38a1f3" />
+                    </g>
 
-              <div className="p-6 sm:p-8 font-mono text-xs sm:text-sm leading-relaxed text-slate-200 bg-slate-900/90 min-h-[260px] flex flex-col justify-between">
-                <div>
-                  <p className="text-slate-500 mb-2"># Lesson 1: Introduction to {course.title}</p>
-                  <p className="text-purple-400">def <span className="text-blue-300">start_learning</span>():</p>
-                  <p className="pl-4 text-emerald-300">topic = "{course.category}"</p>
-                  <p className="pl-4 text-emerald-300">status = "Enrolled & Ready"</p>
-                  <p className="pl-4 text-cyan-300">print(f"Mastering {course.title} with AI Teacher...")</p>
-                  <p className="mt-2 text-purple-400">start_learning()</p>
-                </div>
+                    {/* Center Node */}
+                    <g className="transition-transform hover:scale-105 cursor-pointer">
+                      <circle cx="250" cy="110" r="44" fill="#0062b1" stroke="#38a1f3" strokeWidth="3.5" />
+                      <circle cx="250" cy="110" r="18" fill="#ffffff" opacity="0.95" />
+                    </g>
 
-                <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
-                  <span className="text-xs text-slate-400 font-sans">
-                    ?? Click on the AI Teacher sidebar to ask questions in real-time.
-                  </span>
-                  <button
-                    onClick={() => setCompleted(!completed)}
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
-                      completed
-                        ? "bg-emerald-600 text-white"
-                        : "bg-[#38a1f3] hover:bg-blue-600 text-white shadow-md"
-                    }`}
-                  >
-                    <HiOutlineCheckCircle className="w-4 h-4" />
-                    {completed ? "Completed!" : "Mark Completed"}
-                  </button>
-                </div>
-              </div>
-            </div>
+                    {/* Right Node */}
+                    <g className="transition-transform hover:scale-105 cursor-pointer">
+                      <rect x="370" y="75" width="115" height="70" rx="16" fill="#10b981" stroke="#059669" strokeWidth="2.5" />
+                      <circle cx="427.5" cy="110" r="14" fill="#ffffff" opacity="0.95" />
+                    </g>
 
-            {/* Lesson Tabs */}
-            <div className="bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs">
-              <div className="flex border-b border-slate-200 pb-3 gap-6 text-xs font-black">
-                <button
-                  onClick={() => setActiveTab("overview")}
-                  className={`pb-2 transition-colors cursor-pointer ${
-                    activeTab === "overview"
-                      ? "text-[#0062b1] border-b-2 border-[#0062b1]"
-                      : "text-slate-400 hover:text-slate-700"
-                  }`}
-                >
-                  Overview
-                </button>
-                <button
-                  onClick={() => setActiveTab("code")}
-                  className={`pb-2 transition-colors cursor-pointer ${
-                    activeTab === "code"
-                      ? "text-[#0062b1] border-b-2 border-[#0062b1]"
-                      : "text-slate-400 hover:text-slate-700"
-                  }`}
-                >
-                  Key Takeaways
-                </button>
-              </div>
+                    {/* Top Branch Node */}
+                    <rect x="195" y="10" width="110" height="35" rx="10" fill="#f1f5f9" stroke="#cbd5e1" strokeWidth="2" />
 
-              <div className="mt-4 text-xs font-semibold text-slate-600 leading-relaxed">
-                {activeTab === "overview" ? (
-                  <div className="space-y-3">
-                    <p>
-                      In this lesson, you will explore core principles of <strong>{course.title}</strong>.
-                      Use the 3D AI Teacher panel on the right to clear doubts or test your skills.
-                    </p>
-                    <ul className="list-disc list-inside space-y-1 text-slate-700 font-medium">
-                      <li>Understand fundamental syntax & structural concepts.</li>
-                      <li>Learn best practices for writing clean, maintainable code.</li>
-                      <li>Reinforce your knowledge with interactive AI feedback.</li>
-                    </ul>
-                  </div>
+                    {/* Bottom Branch Node */}
+                    <rect x="195" y="175" width="110" height="35" rx="10" fill="#f1f5f9" stroke="#cbd5e1" strokeWidth="2" />
+                  </svg>
                 ) : (
-                  <div className="space-y-2 font-mono bg-slate-50 p-4 rounded-xl border border-slate-200">
-                    <p className="text-slate-800">? Point 1: Always declare clear variable names.</p>
-                    <p className="text-slate-800">? Point 2: Keep functions modular and focused.</p>
-                    <p className="text-slate-800">? Point 3: Leverage AI assistance for quick debugging.</p>
-                  </div>
+                  /* SVG DIAGRAM 2: COMPONENT GRAPH & DOM TREE */
+                  <svg className="w-full max-w-xl h-72 sm:h-80 text-[#0062b1]" viewBox="0 0 500 220" fill="none">
+                    <path
+                      d="M 250 45 L 150 110 M 250 45 L 350 110 M 150 145 L 100 185 M 150 145 L 200 185"
+                      stroke="#0062b1"
+                      strokeWidth="3"
+                      strokeDasharray="4 4"
+                    />
+
+                    {/* Root Node */}
+                    <rect x="190" y="15" width="120" height="46" rx="12" fill="#0062b1" stroke="#38a1f3" strokeWidth="2.5" />
+
+                    {/* Child Left */}
+                    <rect x="90" y="100" width="120" height="44" rx="12" fill="#063966" stroke="#38a1f3" strokeWidth="2" />
+
+                    {/* Child Right */}
+                    <rect x="290" y="100" width="120" height="44" rx="12" fill="#10b981" stroke="#059669" strokeWidth="2" />
+                  </svg>
                 )}
+              </div>
+
+              {/* Board Action Footer */}
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-end">
+                <button
+                  onClick={() => setCompleted(!completed)}
+                  className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                    completed
+                      ? "bg-emerald-600 text-white shadow-md"
+                      : "bg-[#38a1f3] hover:bg-blue-600 text-white shadow-md"
+                  }`}
+                >
+                  <HiOutlineCheckCircle className="w-4 h-4" />
+                  {completed ? "Completed!" : "Mark Completed"}
+                </button>
+              </div>
+            </div>
+
+            {/* ── LESSON OUTLINE CARD ── */}
+            <div className="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-7 shadow-xs">
+              <h2 className="text-[11px] font-extrabold text-slate-400 tracking-wider uppercase mb-4">
+                Lesson Outline
+              </h2>
+
+              <div className="space-y-1">
+                {outlineItems.map((item, idx) => {
+                  const isActive = activeOutlineIndex === idx;
+                  return (
+                    <button
+                      key={item.title}
+                      onClick={() => setActiveOutlineIndex(idx)}
+                      className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+                        isActive
+                          ? "bg-blue-50/80 text-[#0062b1]"
+                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 truncate pr-2">
+                        {item.isQuiz ? (
+                          <HiOutlineClipboardDocumentCheck className={`w-4 h-4 shrink-0 ${isActive ? "text-[#0062b1]" : "text-slate-400"}`} />
+                        ) : (
+                          <HiPlay className={`w-3.5 h-3.5 shrink-0 ${isActive ? "text-[#0062b1]" : "text-slate-400 opacity-60"}`} />
+                        )}
+                        <span className="truncate tracking-tight">{item.title}</span>
+                      </div>
+                      <span className={`text-[11px] font-mono shrink-0 ${isActive ? "text-blue-500 font-bold" : "text-slate-400 font-semibold"}`}>
+                        {item.duration}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
 
-          {/* RIGHT COLUMN: 3D AI TEACHER PANEL */}
-          <div className="flex flex-col gap-6">
-            <div className="bg-white rounded-3xl border border-slate-200/90 p-6 shadow-md flex flex-col items-center text-center relative overflow-hidden group">
-              {/* Card Header */}
-              <div className="w-full flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
-                <h3 className="text-base font-black tracking-tight font-sans text-transparent bg-clip-text bg-gradient-to-r from-[#063966] via-[#0062b1] to-[#38a1f3] flex items-center gap-1.5">
-                  <HiOutlineSparkles className="w-5 h-5 text-cyan-500 animate-spin" style={{ animationDuration: "8s" }} />
-                  3D AI Teacher
-                </h3>
-                <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-bold">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  Live Tutor
+          {/* RIGHT COLUMN: ANIMATED AI ROBOT WITH FIXED TEXT & CIRCULAR VOICE BUTTON */}
+          <div className="lg:col-span-2 lg:sticky lg:top-4 w-full flex flex-col items-center justify-center py-2 relative">
+            
+            {/* FIXED SPEECH BUBBLE RIGHT AT ROBOT MOUTH (NOT MOVING) */}
+            <div className="relative -mb-4 z-20 max-w-xs">
+              <div className="bg-gradient-to-r from-[#063966] via-[#0062b1] to-[#38a1f3] text-white text-xs font-bold p-3 px-4 rounded-2xl shadow-xl border border-cyan-300/40 flex items-center gap-2.5">
+                <div className="flex items-center gap-0.5 shrink-0">
+                  <span className="w-1 h-3 bg-cyan-300 rounded-full animate-pulse" />
+                  <span className={`w-1 h-4 rounded-full ${isRecording ? "bg-emerald-300 animate-ping" : "bg-white animate-bounce"}`} />
+                  <span className="w-1 h-2.5 bg-cyan-200 rounded-full animate-pulse" />
                 </div>
+                <p className="leading-snug">
+                  {isRecording
+                    ? voiceDetected
+                      ? '"I hear you! Listening to your question..." 🎙️'
+                      : '"Speak now! I am listening..." 👂'
+                    : '"Hi! Click the mic button to talk!" 🚀'}
+                </p>
               </div>
-
-              {/* AI Speech Bubble */}
-              <div className="relative w-full mb-3">
-                <div className="bg-gradient-to-r from-[#063966] to-[#0062b1] text-white text-xs font-semibold p-4 rounded-2xl shadow-md border border-cyan-400/30 text-left relative transition-all duration-300">
-                  <p className="leading-relaxed">
-                    {isThinking ? (
-                      <span className="flex items-center gap-2 text-cyan-200">
-                        <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-                        AI is thinking...
-                      </span>
-                    ) : (
-                      aiResponse
-                    )}
-                  </p>
-                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#0062b1] rotate-45 border-r border-b border-cyan-400/30" />
-                </div>
-              </div>
-
-              {/* -- 3D ROBOT MODEL VIEWER (ANIMATION REMOVED) -- */}
-              <div className="relative w-full h-56 my-2 rounded-3xl bg-gradient-to-b from-cyan-500/10 via-blue-500/5 to-transparent border border-cyan-500/20 overflow-hidden shadow-inner cursor-grab active:cursor-grabbing">
-                <RobotModelViewer className="w-full h-full" autoRotate={true} enableControls={true} />
-              </div>
-
-              {/* Quick Prompts */}
-              <div className="w-full flex flex-wrap gap-1.5 mt-3 mb-2">
-                {samplePrompts.map((prompt) => (
-                  <button
-                    key={prompt}
-                    onClick={() => {
-                      setAskInput(prompt);
-                    }}
-                    className="text-[10px] font-bold bg-slate-50 hover:bg-cyan-50 text-slate-600 hover:text-[#0062b1] border border-slate-200 hover:border-cyan-200 px-2.5 py-1 rounded-full transition-all cursor-pointer text-left"
-                  >
-                    ?? {prompt}
-                  </button>
-                ))}
-              </div>
-
-              {/* Question Input Form */}
-              <form onSubmit={handleAskMe} className="w-full mt-2">
-                <input
-                  type="text"
-                  value={askInput}
-                  onChange={(e) => setAskInput(e.target.value)}
-                  placeholder="Ask your AI Teacher..."
-                  className="w-full bg-slate-50 border border-slate-200 focus:border-[#38a1f3] focus:ring-2 focus:ring-cyan-400/20 rounded-xl px-4 py-3 text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none transition-all"
-                />
-
-                <button
-                  type="submit"
-                  className="w-full mt-3 bg-gradient-to-r from-[#063966] via-[#0062b1] to-[#38a1f3] hover:from-[#0062b1] hover:to-blue-500 text-white font-extrabold text-xs tracking-wide py-3 rounded-xl shadow-md hover:shadow-cyan-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 uppercase"
-                >
-                  <HiOutlineChatBubbleLeftRight className="w-4 h-4" />
-                  <span>Ask AI Teacher</span>
-                </button>
-              </form>
+              {/* Pointer tail pointing to mouth */}
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-[#0062b1] rotate-45 border-r border-b border-cyan-400/40" />
             </div>
+
+            {/* ANIMATED FLOATING ROBOT IMAGE */}
+            <div className="relative w-full flex items-center justify-center bg-transparent">
+              <img
+                src="/assets/robot.png"
+                alt="AI Teacher Robot"
+                className="w-full h-auto max-h-[500px] object-contain drop-shadow-2xl scale-105 sm:scale-115 transition-transform duration-500 animate-[float_4s_ease-in-out_infinite]"
+                style={{
+                  animation: "float 4s ease-in-out infinite",
+                }}
+              />
+            </div>
+
+            {/* ── UNCARDED CIRCULAR VOICE BUTTON & ORB UNDER ROBOT ── */}
+            <div className="mt-2 w-full flex flex-col items-center gap-3 bg-transparent z-20">
+              
+              {/* Voice Powered Orb (Visible when active) */}
+              {isRecording && (
+                <div className="w-20 h-20 relative overflow-hidden rounded-full border-2 border-cyan-300/80 shadow-lg shadow-cyan-500/20">
+                  <VoicePoweredOrb
+                    enableVoiceControl={isRecording}
+                    hue={200}
+                    onVoiceDetected={setVoiceDetected}
+                  />
+                </div>
+              )}
+
+              {/* Circular Student Voice Button */}
+              <Button
+                onClick={() => setIsRecording(!isRecording)}
+                className={`w-16 h-16 rounded-full flex items-center justify-center p-0 transition-all shadow-xl cursor-pointer hover:scale-110 active:scale-95 ${
+                  isRecording
+                    ? "bg-red-500 hover:bg-red-600 text-white shadow-red-300 ring-4 ring-red-300/40 animate-pulse"
+                    : "bg-gradient-to-r from-[#063966] via-[#0062b1] to-[#38a1f3] hover:from-[#0062b1] hover:to-blue-600 text-white shadow-blue-400/50"
+                }`}
+                title={isRecording ? "Stop Recording" : "Start Voice Interaction"}
+              >
+                {isRecording ? (
+                  <MicOff className="w-7 h-7" />
+                ) : (
+                  <Mic className="w-7 h-7" />
+                )}
+              </Button>
+
+              <span className="text-[11px] font-bold text-slate-500 text-center tracking-wide">
+                {isRecording ? "Listening to your voice..." : "Click mic to speak"}
+              </span>
+            </div>
+            
+            {/* Inline keyframe injection for floating robot animation */}
+            <style jsx>{`
+              @keyframes float {
+                0%, 100% {
+                  transform: translateY(0px) scale(1.1);
+                }
+                50% {
+                  transform: translateY(-14px) scale(1.12);
+                }
+              }
+            `}</style>
           </div>
         </div>
       </main>
